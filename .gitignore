@@ -1,8 +1,8 @@
 # Ignore Tecplot Input Files directory
-.plt
-.lay
-.pptx
-.docx
+*.plt
+*.lay
+*.pptx
+*.docx
 
 # Ignore MATLAB autosave and binary data files
 *.asv
