@@ -1,0 +1,8 @@
+# Ignore Tecplot Input Files directory
+Tecplot_InputFiles/
+
+# Ignore MATLAB autosave and binary data files
+*.asv
+*.mat
+
+points
