@@ -7,6 +7,31 @@
 # Ignore MATLAB autosave and binary data files
 *.asv
 *.mat
+log_run
+processor*/
 
 polyMesh/
 figure/
+
+
+# Ignore post-processing data
+postProcessing/
+sets/
+surfaces/
+
+*.foam
+
+[0-9]*/
+![01]*/
+![02]*/
+![03]*/
+![04]*/
+![05]*/
+![06]*/
+![07]*/
+![08]*/
+![09]*/
+
+.out
+log.*
+*.log
