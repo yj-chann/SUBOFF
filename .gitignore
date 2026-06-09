@@ -27,7 +27,7 @@ processor*/
 
 # Ignore heavy generated mesh files (Safe if mesh dicts are in /system)
 polyMesh/
-
+polyMesh.orig/
 # Ignore on-the-fly C++ compilation directories
 dynamicCode/
 
@@ -56,6 +56,10 @@ log_run
 # Other specialized OpenFOAM mesh dump files
 cellDist
 cellDecomposition
+C
+Cx
+Cy
+Cz
 
 # ====================================================================
 # External Tools (MATLAB, Office, OS)

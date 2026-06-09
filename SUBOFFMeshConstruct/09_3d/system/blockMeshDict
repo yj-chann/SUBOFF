@@ -1,0 +1,104 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2312                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+scale   1;
+
+NJ  5;
+NK  16;
+NL  #eval{$NK/4};
+NN  2;
+
+vertices
+(
+    (0 1 -1)   // 0
+    (0 1 1)   // 1
+    (0 -1 1)   // 2
+    (0 -1 -1)   // 3
+    (0 2 -2)   // 4
+    (0 2 2)   // 5
+    (0 -2 2)   // 6
+    (0 -2 -2)   // 7
+    (-10 1 -1)   // 8
+    (-10 1 1)   // 9
+    (-10 -1 1)   // 10
+    (-10 -1 -1)   // 11
+    (-10 2 -2)   // 12
+    (-10 2 2)   // 13
+    (-10 -2 2)   // 14
+    (-10 -2 -2)   // 15
+);
+
+blocks
+(
+    hex (8 0 4 12 9 1 5 13) ($NN $NJ $NL) simpleGrading (1 1 1) // CY 1
+    hex (9 1 5 13 10 2 6 14) ($NN $NJ $NL) simpleGrading (1 1 1)
+    hex (10 2 6 14 11 3 7 15) ($NN $NJ $NL) simpleGrading (1 1 1)
+    hex (11 3 7 15 8 0 4 12) ($NN $NJ $NL) simpleGrading (1 1 1) // CY 4
+    hex (8 0 1 9 11 3 2 10) ($NN $NL $NL) simpleGrading (1 1 1) // RECT
+);
+
+edges
+(
+);
+
+boundary
+(
+    INLET1
+    {
+        type patch;
+        faces
+        (
+            (8 11 10 9)
+        );
+    }
+    INLET2
+    {
+        type patch;
+        faces
+        (
+            (8 9 13 12)
+            (9 10 14 13)
+            (10 11 15 14)
+            (8 12 15 11)
+        );
+    }
+    HULL
+    {
+        type wall;
+        faces
+        (
+            (0 4 5 1)
+            (1 5 6 2)
+            (2 6 7 3)
+            (0 3 7 4)
+            (1 2 3 0)
+        );
+    }
+    OUTLET
+    {
+        type patch;
+        faces
+        (
+            (5 4 12 13)
+            (5 13 14 6)
+            (6 14 15 7)
+            (4 7 15 12)
+        );
+    }
+);
+
+
+// ************************************************************************* //
