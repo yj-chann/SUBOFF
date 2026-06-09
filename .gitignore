@@ -1,27 +1,19 @@
-# Ignore Tecplot Input Files directory
-*.plt
-*.lay
-*.pptx
-*.docx
+# ====================================================================
+# OpenFOAM Simulation Outputs & Mesh
+# ====================================================================
 
-# Ignore MATLAB autosave and binary data files
-*.asv
-*.mat
-log_run
+
+# Ignore all parallel processing directories
 processor*/
 
-polyMesh/
-figure/
-
-
-# Ignore post-processing data
-postProcessing/
-sets/
-surfaces/
-
-*.foam
-
+# Ignore all numbered time-step directories (results)
 [0-9]*/
+
+# EXCEPT initial conditions & backup configurations
+![0]/
+!0.orig/
+
+# Do not ignore the Process dir
 ![01]*/
 ![02]*/
 ![03]*/
@@ -32,9 +24,47 @@ surfaces/
 ![08]*/
 ![09]*/
 
-.out
+
+# Ignore heavy generated mesh files (Safe if mesh dicts are in /system)
+polyMesh/
+
+# Ignore on-the-fly C++ compilation directories
+dynamicCode/
+
+# ====================================================================
+# Post-Processing & Logs
+# ====================================================================
+postProcessing/
+sets/
+surfaces/
+VTK/
+figure/
+
+# Ignore solver logs and standard output files
 log.*
 *.log
+log_run
+.out
 
+# Ignore ParaView/Tecplot visualization links/data
+*.foam
+*.pvd
+*.plt
+*.lay
+.ParaView/
+
+# Other specialized OpenFOAM mesh dump files
 cellDist
 cellDecomposition
+
+# ====================================================================
+# External Tools (MATLAB, Office, OS)
+# ====================================================================
+*.asv
+*.mat
+*.pptx
+*.docx
+
+# OS metadata junk
+.DS_Store
+Thumbs.db
