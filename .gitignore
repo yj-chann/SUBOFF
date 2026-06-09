@@ -1,5 +1,6 @@
 # Ignore Tecplot Input Files directory
-Tecplot_InputFiles/
+.plt
+.lay
 
 # Ignore MATLAB autosave and binary data files
 *.asv
