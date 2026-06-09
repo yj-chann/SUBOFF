@@ -5,4 +5,5 @@ Tecplot_InputFiles/
 *.asv
 *.mat
 
-points
+polyMesh/
+figure/
