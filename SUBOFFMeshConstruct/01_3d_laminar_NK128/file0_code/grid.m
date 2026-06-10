@@ -1,28 +1,32 @@
 clc;clear;
+% L=0.8712 R=0.0508
+
 NJ1=150; NJ2=450; NK=640; 
-NL=NK/4; NJ=NJ1+NJ2;
-NI=200;
+NL=NK/4; NJ=NJ1+NJ2;NJ_ADD=200;
+NI=200;NI_ADD=20;
 % ----------------------%
 NJ1=NJ1/5; NJ2=NJ2/5; NK=NK/5; 
-NL=NL/5; NJ=NJ/5;
-NI=NI/5;
+NL=NL/5; NJ=NJ/5;NJ_ADD=NJ_ADD/5;
+NI=NI/5;NI_ADD=NI_ADD/5;
 
 
-YL=1.319982690331325;
+NN=NI+NI_ADD;
+
+YL=0.55;
 % Define the sub-region parameters
-YlenRatios  = [0.001120617665405 , 0.033512148589901 , 0.190506335071164 , 1.094843589004855];
-YcellRatios = [10 , 70 , 70 , 50];
-YexpRatios  = [1, 1.035^69, 1.02^69, 1.05^49];
-Y= splitEdge(YL, NI, YlenRatios, YcellRatios, YexpRatios);
+YlenRatios  = [0.005 , 0.18 , 1 , 5.75, 10];
+YcellRatios = [10 , 70 , 70 , 50 , 20];
+YexpRatios  = [1 , 10.7, 3.9, 10.9 , 1];
+Y= splitEdge(YL, NN, YlenRatios, YcellRatios, YexpRatios);
 
 % Total Length and Total Cells
-SL = 0.318375516744177;
-NS = NL/2 + NJ;
+SL = 0.5;
+NS = NL/2 + NJ + NJ_ADD;
 
 % Define the sub-region parameters
-SlenRatios  = [0.011310250358779 , 0.029642896118238 , 0.277422318174171];
-ScellRatios = [NL/2 , NJ1 ,NJ2];
-SexpRatios  = [1, 1.0035^(NJ1-1), 1.0035^(NJ2-1)];
+SlenRatios  = [0.35 , 0.95 , 9 , 8];
+ScellRatios = [NL/2 , NJ1 , NJ2, NJ_ADD];
+SexpRatios  = [1, 1.1 , 4 , 1];
 
 % 子午面
 % Generate the mesh nodes
@@ -109,7 +113,7 @@ fclose(fid);
 
 % CY2
 THETA_REF2=linspace(-pi/4,7*pi/4,NK+1);
-THETA_REF2=THETA_REF2(1:end-1);
+THETA_REF2=THETA_REF2(1:NK);
 CY_X2=ones(NK,1)*X(NL/2+1+NJ1:NL/2+1+NJ);
 CY_Y2=(ones(NK,1)*Get_R(X(NL/2+1+NJ1:NL/2+1+NJ))).*(transpose(cos(THETA_REF2))*ones(1,NJ2+1));
 CY_Z2=(ones(NK,1)*Get_R(X(NL/2+1+NJ1:NL/2+1+NJ))).*(transpose(sin(THETA_REF2))*ones(1,NJ2+1));
@@ -127,9 +131,9 @@ for j = 1:NJ2+1
 end
 fclose(fid);
 
-CY_X=[CY_X1(:,1:end-1) CY_X2];
-CY_Y=[CY_Y1(:,1:end-1) CY_Y2];
-CY_Z=[CY_Z1(:,1:end-1) CY_Z2];
+CY_X=[CY_X1(:,1:NJ1) CY_X2];
+CY_Y=[CY_Y1(:,1:NJ1) CY_Y2];
+CY_Z=[CY_Z1(:,1:NJ1) CY_Z2];
 fid = fopen('Tecplot_InputFiles/CY_surface.plt', 'w');
 fprintf(fid, 'TITLE = "CY_Wall"\n');
 fprintf(fid, 'VARIABLES = "X", "Y", "Z"\n');
@@ -176,10 +180,10 @@ fprintf(fid, '(\n');
 % First main loop block
 for K = 1:(NL*4)
     for J = 1:(NJ+1)
-        for I = NI:-1:0
+        for I = NI+1:-1:1
             % Assuming GET_K outputs XIELV and GET_P outputs XP, YP, ZP.
             XIELV = Get_K(CY_X(K,J));
-            [XP, YP, ZP] = Get_P(CY_X(K,J), CY_Y(K,J), CY_Z(K,J), XIELV, Y(I+1));
+            [XP, YP, ZP] = Get_P(CY_X(K,J), CY_Y(K,J), CY_Z(K,J), XIELV, Y(I));
             
             fprintf(fid, '( %22.15E %22.15E %22.15E )\n', XP, YP, ZP);
         end
@@ -190,17 +194,17 @@ end
 for J = NL:-1:2
     for K = 2:NL
         if J == (NL/2 + 1) && K == (NL/2 + 1)
-            for I = NI:-1:0
-                XP = -Y(I+1);
+            for I = NI+1:-1:1
+                XP = -Y(I);
                 YP = 0.0;
                 ZP = 0.0;
 
                 fprintf(fid, '( %22.15E %22.15E %22.15E )\n', XP, YP, ZP);
             end
         else
-            for I = NI:-1:0
+            for I = NI+1:-1:1
                 XIELV = Get_K(RECT_X(J,K));
-                [XP, YP, ZP] = Get_P(RECT_X(J,K), RECT_Y(J,K), RECT_Z(J,K), XIELV, Y(I+1));
+                [XP, YP, ZP] = Get_P(RECT_X(J,K), RECT_Y(J,K), RECT_Z(J,K), XIELV, Y(I));
                 
                 fprintf(fid, '( %22.15E %22.15E %22.15E )\n', XP, YP, ZP);
             end
@@ -213,4 +217,38 @@ fprintf(fid, ')\n\n\n');
 fprintf(fid, '// ************************************************************************* //\n');
 % Close the file
 fclose(fid);
+
+
+
+fid= fopen('Tecplot_InputFiles\suboff_mesh_2d.plt','w');
+fprintf(fid,'ZONE T = "suboff_mesh_2d", I = %d, J = %d, F=POINT\n',NL/2+NJ+1,NI+1);
+for I=NI+1:-1:1
+for J=1:NL/2+NJ+1  
+    if J==1
+        fprintf(fid, '%22.15E %22.15E\n', -Y(I) , 0.0);
+    else
+        XIELV = Get_K(X(J));
+        [XP, YP, ZP] = Get_P(X(J), Get_R(X(J)), 0, XIELV, Y(I)); 
+        fprintf(fid, '%22.15E %22.15E\n', XP, YP);
+    end
+end
+end
+fclose(fid);
+
+fid= fopen('Tecplot_InputFiles\suboff_mesh_2d_ADD.plt','w');
+fprintf(fid,'ZONE T = "suboff_mesh_2d_ADD", I = %d, J = %d, F=POINT\n',NS+1,NN+1);
+for I=NN+1:-1:1
+for J=1:NS+1  
+        if J==1
+            fprintf(fid, '%22.15E %22.15E\n', -Y(I) , 0.0);
+        else
+            XIELV = Get_K(X(J));
+            [XP, YP, ZP] = Get_P(X(J), Get_R(X(J)), 0, XIELV, Y(I));
+            fprintf(fid, '%22.15E %22.15E\n', XP, YP);
+        end
+end
+end
+fclose(fid);
+
+
 
