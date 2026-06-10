@@ -28,6 +28,7 @@ processor*/
 # Ignore heavy generated mesh files (Safe if mesh dicts are in /system)
 polyMesh/
 polyMesh.orig/
+points
 # Ignore on-the-fly C++ compilation directories
 dynamicCode/
 
