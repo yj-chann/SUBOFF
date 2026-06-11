@@ -3,7 +3,7 @@ clc;clear;
 
 NJ1=150; NJ2=450; NK=640; 
 NL=NK/4; NJ=NJ1+NJ2;NJ_ADD=300;
-NI=200;NI_ADD=20;
+NI=400;NI_ADD=40;
 % ----------------------%
 
 
