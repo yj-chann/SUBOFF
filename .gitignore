@@ -9,6 +9,9 @@ processor*/
 # Ignore all numbered time-step directories (results)
 [0-9]*/
 
+uniform/
+phi
+
 # EXCEPT initial conditions & backup configurations
 ![0]/
 !0.orig/
