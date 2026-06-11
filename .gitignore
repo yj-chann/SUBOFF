@@ -14,15 +14,15 @@ processor*/
 !0.orig/
 
 # Do not ignore the Process dir
-![01]*/
-![02]*/
-![03]*/
-![04]*/
-![05]*/
-![06]*/
-![07]*/
-![08]*/
-![09]*/
+![01_]*/
+![02_]*/
+![03_]*/
+![04_]*/
+![05_]*/
+![06_]*/
+![07_]*/
+![08_]*/
+![09_]*/
 
 
 # Ignore heavy generated mesh files (Safe if mesh dicts are in /system)
