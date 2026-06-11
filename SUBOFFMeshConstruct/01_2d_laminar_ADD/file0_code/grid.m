@@ -2,7 +2,7 @@ clc;clear;
 % L=0.8712 R=0.0508
 
 NJ1=150; NJ2=450; NK=640; 
-NL=NK/4; NJ=NJ1+NJ2;NJ_ADD=200;
+NL=NK/4; NJ=NJ1+NJ2;NJ_ADD=300;
 NI=200;NI_ADD=20;
 % ----------------------%
 
@@ -17,19 +17,24 @@ YexpRatios  = [1 , 10.7, 3.9, 10.9 , 1];
 Y= splitEdge(YL, NN, YlenRatios, YcellRatios, YexpRatios);
 
 % Total Length and Total Cells
-SL = 0.5;
+SL = 0.65;
 NS = NL/2 + NJ + NJ_ADD;
 
 % Define the sub-region parameters
-SlenRatios  = [0.35 , 0.95 , 9 , 8];
+SlenRatios  = [0.35 , 0.95 , 9 , 12];
 ScellRatios = [NL/2 , NJ1 , NJ2, NJ_ADD];
 SexpRatios  = [1, 1.1 , 4 , 1];
+
+
 
 % 子午面
 % Generate the mesh nodes
 S = splitEdge(SL, NS, SlenRatios, ScellRatios, SexpRatios);
 X = Get_x_from_S(S);
 
+figure
+plot(S)
+title('S')
 
 fid= fopen('Tecplot_InputFiles\suboff_mesh_2d.plt','w');
 fprintf(fid,'ZONE T = "suboff_mesh_2d", I = %d, J = %d, F=POINT\n',NL/2+NJ+1,NI+1);
