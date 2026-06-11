@@ -20,7 +20,7 @@
  endTime         2000;
  deltaT          1;
  writeControl    timeStep;
- writeInterval   200;
+ writeInterval   2000;
  purgeWrite      0;
  writeFormat     ascii;
  writePrecision  14;
