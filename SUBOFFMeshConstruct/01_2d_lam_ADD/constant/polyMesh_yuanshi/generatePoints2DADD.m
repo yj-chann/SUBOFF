@@ -3,6 +3,7 @@ NN = 220;
 NS = 880;
 NN_PLUS_ONE = NN+1;
 NS_PLUS_ONE = NS+1 ;
+NK=640;
 % =========================================================================
 
 % Calculate total points
@@ -17,13 +18,11 @@ Y0 = reshape(data(:,2), NS_PLUS_ONE, NN_PLUS_ONE)';
 
 % --- Write OpenFOAM points file ---
 % Ensure the output directory exists
-if ~exist('../polyMesh', 'dir')
-    mkdir('../polyMesh');
-end
 
-fid2 = fopen('../polyMesh/points', 'w');
+
+fid2 = fopen('points', 'w');
 if fid2 == -1
-    error('Cannot open ../polyMesh/points for writing.');
+    error('Cannot open points for writing.');
 end
 
 % Write OpenFOAM Header (escaping backslashes properly for MATLAB)
