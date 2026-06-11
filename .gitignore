@@ -7,7 +7,10 @@
 processor*/
 
 # Ignore all numbered time-step directories (results)
-[0-9]*/
+[1-9]*/
+0.*/
+
+
 
 uniform/
 phi
@@ -16,16 +19,8 @@ phi
 ![0]/
 !0.orig/
 
-# Do not ignore the Process dir
-![01_]*/
-![02_]*/
-![03_]*/
-![04_]*/
-![05_]*/
-![06_]*/
-![07_]*/
-![08_]*/
-![09_]*/
+
+
 
 
 # Ignore heavy generated mesh files (Safe if mesh dicts are in /system)
