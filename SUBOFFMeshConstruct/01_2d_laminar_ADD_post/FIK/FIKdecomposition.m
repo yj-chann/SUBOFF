@@ -91,7 +91,7 @@ for i = 1:NS
     Cf_C_cart(i) = (2 / Uref^2) * trapz(n, integrand_C);
     
     % 4. Other Derivatives (Diffusion) Base Term
-    integrand_D = W .* ((1 / Re_del) * d2Usds2);
+    integrand_D = W .* (nu * d2Usds2);
     Cf_D_cart(i) = (2 / Uref^2) * trapz(n, integrand_D);
 
 
@@ -126,7 +126,7 @@ for i = 1:NS
     T4 = (k0^2 * (r + n * cosP) ./ (r * (1 + n * k0)) + (1 + n * k0) * sinP^2 ./ (r * (r + n * cosP))) .* u;
     T5 = ((r + n * cosP) ./ (r * (1 + n * k0).^2) * dk0 + sinP * (k0 * r - cosP) ./ (r * (r + n * cosP))) .* v;
     
-    integrand_D_geo = W .* ( (1 / Re_del) .* (T1 + T2 + T3 - T4 + T5) );
+    integrand_D_geo = W .* (nu .* (T1 + T2 + T3 - T4 + T5) );
     Cf_D_geo(i) = (2 / Uref^2) * trapz(n, integrand_D_geo);
     
 end
@@ -145,45 +145,457 @@ Cf_PG=Cf_PG_cart+Cf_PG_geo;
 Cf_C=Cf_C_cart+Cf_C_geo;
 Cf_D=Cf_D_cart+Cf_D_geo;
 
-figure
-plot(S, Cf, 'k', 'LineWidth', 2); hold on;
-plot(S, Cf_nu_cart, 'LineWidth', 2);
-plot(S, Cf_PG_cart, 'LineWidth', 2);
-plot(S, Cf_C_cart, 'LineWidth', 2);
-plot(S, Cf_D_cart, 'LineWidth', 2);
 
-figure
-plot(S, Cf_nu_cart, 'LineWidth', 2);hold on;
-plot(S, Cf_nu_geo, 'LineWidth', 2);
+% =========================================================================
+% OPTIMIZED VISUALIZATION SETTINGS
+% =========================================================================
+% Set default interpreter to LaTeX and font to Times New Roman
+set(groot, 'defaultTextInterpreter', 'latex');
+set(groot, 'defaultAxesTickLabelInterpreter', 'latex');
+set(groot, 'defaultLegendInterpreter', 'latex');
+set(groot, 'defaultAxesFontName', 'Times New Roman');
+set(groot, 'defaultAxesLineWidth', 1.2);
 
-figure
-plot(S, Cf_PG_cart, 'LineWidth', 2);hold on;
-plot(S, Cf_PG_geo, 'LineWidth', 2);
+% Calculate the sum of the terms to verify FIK identity
+Cf_sum = Cf_nu + Cf_PG + Cf_C + Cf_D;
 
 
-figure
-plot(S, Cf_C_cart, 'LineWidth', 2);hold on;
-plot(S, Cf_C_geo, 'LineWidth', 2);
 %% 
 
-% Plotting Quick Check (Optional)
-figure;
+% -------------------------------------------------------------------------
+% FIGURE 1: FIK Identity Verification and Decomposition
+% -------------------------------------------------------------------------
+L=4.356*0.2;
+figure('Position', [400, 100, 900, 400], 'Name', 'FIK Decomposition');
+plot(S/L, Cf, 'k', 'LineWidth', 2.5, 'DisplayName', '$C_f$'); hold on;
+plot(S(1:25:end-5)/L, Cf_sum(1:25:end-5), 'r','LineStyle','none', 'LineWidth', 2, 'Marker','square',...
+    'MarkerSize',8, 'DisplayName', '$\sum C_{f,i}$ (FIK)');
+plot(S(1:25:end-5)/L, Cf_nu(1:25:end-5), 'b^-', 'LineWidth', 1.5, 'DisplayName', '$C_{\nu}$');
+plot(S(1:25:end-5)/L, Cf_PG(1:25:end-5), 'g<-', 'LineWidth', 1.5, 'DisplayName', '$C_{PG}$');
+plot(S(1:25:end-5)/L, Cf_C(1:25:end-5),'c>-', 'LineWidth', 1.5, 'DisplayName', '$C_{C}$');
+plot(S(1:25:end-5)/L, Cf_D(1:25:end-5),'mv-', 'LineWidth', 1.5, 'DisplayName', '$C_{D}$');
+legend('Location', 'northeast','FontSize',14);
+set(gca, 'FontSize', 14);
+xlabel('$s/L$','FontSize',18);
+xlim([0,0.7])
+ylim([-0.01,0.05])
+grid off;
 
-plot(S, Cf, 'k', 'LineWidth', 2); hold on;
-plot(S, Cf_cartesian_total, 'b--', 'LineWidth', 1.5);
-plot(S, Cf_geometric_total, 'r:', 'LineWidth', 1.5);
-plot(S, Cf_cartesian_total+Cf_geometric_total, 'r:', 'LineWidth', 1.5);
-xlabel('Streamwise Distance (S)');
-ylabel('C_f');
-legend('Total C_f', 'Cartesian Base C_f', 'Geometric Correction C_f','fik');
-title('FIK Decomposition for Laminar Skin Friction');
-grid on;
+
+% -------------------------------------------------------------------------
+% FIGURE 2: Ratio of the Terms to Total Cf
+% -------------------------------------------------------------------------
+L=4.356*0.2;
+figure('Position', [400, 100, 900, 400]);
+plot(S(5:25:end-5)/L, Cf_nu(5:25:end-5) ./ Cf(5:25:end-5),'b^-', 'LineWidth', 1.5, 'DisplayName', '$C_{\nu} / C_f$'); hold on;
+plot(S(5:25:end-5)/L, Cf_PG(5:25:end-5) ./ Cf(5:25:end-5),'g<-', 'LineWidth', 1.5, 'DisplayName', '$C_{PG} / C_f$');
+plot(S(5:25:end-5)/L, Cf_C(5:25:end-5) ./ Cf(5:25:end-5),'c>-', 'LineWidth', 1.5, 'DisplayName', '$C_{C} / C_f$');
+plot(S(5:25:end-5)/L, Cf_D(5:25:end-5) ./ Cf(5:25:end-5),'mv-', 'LineWidth', 1.5, 'DisplayName', '$C_{D} / C_f$');
+
+set(gca, 'FontSize', 14);
+xlabel('$s/L$','FontSize',18);
+legend('Location', 'southeast','FontSize',14);
+xlim([0,0.7])
+ylim([-1.5,1.5])
+grid off;
+%% 
 
 
-figure
-plot(S,Cf);hold on;
-plot(S,Cf_nu+Cf_PG+Cf_C)
-% plot(S,Cf_nu)
-% plot(S,Cf_PG)
-% plot(S,Cf_C)
-% plot(S,Cf_D)
+% =========================================================================
+% FIGURE 3: TOTAL CARTESIAN VS TOTAL GEOMETRIC EFFECT ON Cf
+% =========================================================================
+L = 4.356 * 0.2;
+color_total = 'k';              
+color_base  = [0.8 0 0];        
+color_shade = [0.95 0.8 0.8];   
+smooth_method = 'sgolay'; 
+
+S_row = S(:)';
+X_fill = [S_row, fliplr(S_row)] / L;
+
+% --- SMOOTHING STEP ---
+% Using the already compiled Cf_cartesian_total and Cf_Total arrays
+Cf_cart_total_sm = smoothdata(Cf_cartesian_total, smooth_method);
+Cf_Total_sm      = smoothdata(Cf_Total, smooth_method);
+
+% --- SETUP MAIN FIGURE & AXES ---
+fig5 = figure('Position', [450, 150, 900, 400], 'Name', 'Total Geometric Effect on Cf');
+ax= axes('Position', [0.1, 0.15, 0.85, 0.8]);
+hold(ax, 'on'); box(ax, 'on');
+
+Y_fill_Total = [Cf_cart_total_sm(:)', fliplr(Cf_Total_sm(:)')];
+
+% --- PLOT MAIN DATA ---
+plot(ax, S/L, Cf_Total_sm, '-', 'Color', color_total, 'LineWidth', 2, ...
+    'DisplayName', 'Total $C_f$');
+plot(ax, S/L, Cf_cart_total_sm, '--', 'Color', color_base, 'LineWidth', 2, ...
+    'DisplayName', 'Cartesian Term $C_f^{cart}$');
+fill(ax, X_fill, Y_fill_Total, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', ...
+    'DisplayName', 'Geometric Effect $C_f^{geo}$');
+
+yline(ax, 0, 'k-', 'LineWidth', 0.8, 'HandleVisibility', 'off');
+
+% Format Main Axes
+set(ax, 'FontSize', 14, 'LineWidth', 1.2);
+xlabel(ax, '$s/L$', 'FontSize', 18, 'Interpreter', 'latex');
+legend(ax, 'Location', 'northeast', 'FontSize', 14, 'Interpreter', 'latex');
+xlim(ax, [0, 0.7]);
+ylim(ax, [0, 0.07]);
+grid(ax, 'off');
+
+%% 
+
+% =========================================================================
+% FIGURE: PERCENTAGE OF CARTESIAN AND GEOMETRIC EFFECTS ON Cf
+% =========================================================================
+L = 4.356 * 0.2;
+% --- CALCULATE PERCENTAGES ---
+% Calculate the smoothed geometric total
+Cf_geo_total_sm = Cf_Total_sm - Cf_cart_total_sm;
+
+% Calculate percentage contributions
+Pct_cart = (Cf_cart_total_sm ./ Cf_Total_sm);
+Pct_geo  = (Cf_geo_total_sm ./ Cf_Total_sm);
+
+% --- SETUP MAIN FIGURE & AXES ---
+fig_pct = figure('Position', [450, 150, 900, 400], 'Name', 'Percentage Breakdown of Cf');
+ax_pct = axes('Position', [0.1, 0.15, 0.85, 0.8]);
+hold(ax_pct, 'on'); box(ax_pct, 'on');
+
+% --- PLOT PERCENTAGE DATA ---
+plot(ax_pct, S(15:25:end-5)/L, Pct_cart(15:25:end-5), 's-', 'Color', 'r', 'LineWidth', 2, ...
+    'MarkerSize',8,'DisplayName', '$C_f^{cart} / C_f$');
+
+% Using a distinct blue color for the geometric line to differentiate from the base red
+plot(ax_pct, S(15:25:end-5)/L, Pct_geo(15:25:end-5), 's-', 'Color', 'b', 'LineWidth', 2, ...
+    'MarkerSize',8,'DisplayName', '$C_f^{geo} / C_f$');
+
+% Reference lines at 0% and 100%
+yline(ax_pct, 0, 'k-', 'LineWidth', 0.8, 'HandleVisibility', 'off');
+yline(ax_pct, 100, 'k--', 'LineWidth', 0.8, 'HandleVisibility', 'off', 'Color', [0.5 0.5 0.5]); 
+
+% Format Main Axes
+set(ax_pct, 'FontSize', 14, 'LineWidth', 1.2);
+xlabel(ax_pct, '$s/L$', 'FontSize', 18, 'Interpreter', 'latex');
+legend(ax_pct, 'Location', 'best', 'FontSize', 14, 'Interpreter', 'latex');
+xlim(ax_pct, [0, 0.7]);
+ylim(ax_pct, [-1, 2]); 
+grid(ax_pct, 'off');
+
+%% 
+% =========================================================================
+% PUBLICATION-QUALITY SETTINGS
+% =========================================================================
+set(groot, 'defaultTextInterpreter', 'latex');
+set(groot, 'defaultAxesTickLabelInterpreter', 'latex');
+set(groot, 'defaultLegendInterpreter', 'latex');
+set(groot, 'defaultAxesFontName', 'Times New Roman');
+set(groot, 'defaultAxesLineWidth', 1.2);
+set(groot, 'defaultAxesFontSize', 14);
+
+
+
+% =========================================================================
+% FIGURE 1: VISCOUS TERM WITH DUAL ZOOM INSETS
+% =========================================================================
+L = 4.356 * 0.2;
+
+% Match colors exactly
+color_total = 'k';              % Black for Total
+color_base  = [0.8 0 0];        % Red for Cartesian Base
+color_shade = [0.95 0.8 0.8];   % Pinkish for Geometric Shade
+
+% --- SMOOTHING STEP ---
+smooth_method = 'sgolay'; 
+Cf_nu_cart_sm = smoothdata(Cf_nu_cart, smooth_method);
+Cf_nu_sm      = smoothdata(Cf_nu, smooth_method);
+
+% --- 1. SETUP MAIN FIGURE & AXES ---
+fig1 = figure('Position', [400, 100, 900, 400]);
+ax_main = axes('Position', [0.1, 0.15, 0.85, 0.8]); % Define explicit position
+hold(ax_main, 'on'); box(ax_main, 'on');
+
+% Prepare the X-coordinates for the fill polygon
+S_row = S(:)';
+X_fill = [S_row, fliplr(S_row)] / L;
+Y_fill_nu = [Cf_nu_cart_sm(:)', fliplr(Cf_nu_sm(:)')];
+
+% --- 2. PLOT MAIN DATA ---
+plot(ax_main, S/L, Cf_nu_sm, '-', 'Color', color_total, 'LineWidth', 2, ...
+    'DisplayName', 'Total $C_{\nu}$');
+plot(ax_main, S/L, Cf_nu_cart_sm, '--', 'Color', color_base, 'LineWidth', 2, ...
+    'DisplayName', 'Cartesian Term $C_{\nu}^{cart}$');
+fill(ax_main, X_fill, Y_fill_nu, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', ...
+    'DisplayName', 'Geometric Effect $C_{\nu}^{geo}$');
+
+
+
+% Format Main Axes
+set(ax_main, 'FontSize', 14, 'LineWidth', 1.2);
+xlabel(ax_main, '$s/L$', 'FontSize', 18);
+legend(ax_main, 'Location', 'northeast', 'FontSize', 14);
+xlim(ax_main, [0, 0.7]);
+ylim(ax_main, [0.0, 0.02]);
+grid(ax_main, 'off');
+
+% --- Helper Functions for Coordinate Mapping ---
+% Converts Data Coordinates to Normalized Figure Coordinates
+xl = xlim(ax_main);
+yl = ylim(ax_main);
+pos = get(ax_main, 'Position');
+x2norm = @(x) pos(1) + (x - xl(1)) / (xl(2) - xl(1)) * pos(3);
+y2norm = @(y) pos(2) + (y - yl(1)) / (yl(2) - yl(1)) * pos(4);
+
+% =========================================================================
+% --- 3. FIRST ZOOM REGION (Peak area) ---
+% =========================================================================
+x_zoom1 = [0.015, 0.055]; 
+y_zoom1 = [0.016, 0.019];
+
+% Draw bounding box
+plot(ax_main, [x_zoom1(1) x_zoom1(2) x_zoom1(2) x_zoom1(1) x_zoom1(1)], ...
+              [y_zoom1(1) y_zoom1(1) y_zoom1(2) y_zoom1(2) y_zoom1(1)], ...
+              'k--', 'LineWidth', 1.5, 'HandleVisibility', 'off');
+
+% Create Inset Axes 1
+inset_pos1 = [0.25, 0.55, 0.12, 0.35]; 
+ax_inset1 = axes('Position', inset_pos1);
+hold(ax_inset1, 'on'); box(ax_inset1, 'on');
+
+fill(ax_inset1, X_fill, Y_fill_nu, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', 'HandleVisibility', 'off');
+plot(ax_inset1, S/L, Cf_nu_cart_sm, '--', 'Color', color_base, 'LineWidth', 2, 'HandleVisibility', 'off');
+plot(ax_inset1, S/L, Cf_nu_sm, '-', 'Color', color_total, 'LineWidth', 2, 'HandleVisibility', 'off');
+
+xlim(ax_inset1, x_zoom1); ylim(ax_inset1, y_zoom1);
+set(ax_inset1, 'XTick', [], 'YTick', [], 'LineWidth', 1.2);
+
+% Connecting lines for Inset 1
+annotation('line', [x2norm(x_zoom1(2)), inset_pos1(1)], [y2norm(y_zoom1(2)), inset_pos1(2) + inset_pos1(4)], 'LineStyle', '--', 'LineWidth', 1.5, 'Color', 'k');
+annotation('line', [x2norm(x_zoom1(2)), inset_pos1(1)], [y2norm(y_zoom1(1)), inset_pos1(2)], 'LineStyle', '--', 'LineWidth', 1.5, 'Color', 'k');
+
+% =========================================================================
+% --- 4. SECOND ZOOM REGION (x = 0.48 to 0.52) ---
+% =========================================================================
+x_zoom2 = [0.48, 0.52];
+% NOTE: Adjust y_zoom2 based on the actual min/max of your data in this specific range!
+y_zoom2 = [0.0015, 0.0025]; 
+
+% Draw bounding box
+plot(ax_main, [x_zoom2(1) x_zoom2(2) x_zoom2(2) x_zoom2(1) x_zoom2(1)], ...
+              [y_zoom2(1) y_zoom2(1) y_zoom2(2) y_zoom2(2) y_zoom2(1)], ...
+              'k--', 'LineWidth', 1.5, 'HandleVisibility', 'off');
+
+% Create Inset Axes 2 (Placed in the middle-top area)
+inset_pos2 = [0.60, 0.40, 0.12, 0.2]; 
+ax_inset2 = axes('Position', inset_pos2);
+hold(ax_inset2, 'on'); box(ax_inset2, 'on');
+
+fill(ax_inset2, X_fill, Y_fill_nu, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', 'HandleVisibility', 'off');
+plot(ax_inset2, S/L, Cf_nu_cart_sm, '--', 'Color', color_base, 'LineWidth', 2, 'HandleVisibility', 'off');
+plot(ax_inset2, S/L, Cf_nu_sm, '-', 'Color', color_total, 'LineWidth', 2, 'HandleVisibility', 'off');
+
+xlim(ax_inset2, x_zoom2); ylim(ax_inset2, y_zoom2);
+set(ax_inset2, 'XTick', [], 'YTick', [], 'LineWidth', 1.2);
+
+% Connecting lines for Inset 2 (From UPPER EDGE of the dashed box to BOTTOM CORNERS of inset)
+% Line 1: Top-Left of bounding box -> Bottom-Left of inset
+annotation('line', [x2norm(x_zoom2(1)), inset_pos2(1)], ...
+                   [y2norm(y_zoom2(2)), inset_pos2(2)], ...
+                   'LineStyle', '--', 'LineWidth', 1.5, 'Color', 'k');
+
+% Line 2: Top-Right of bounding box -> Bottom-Right of inset
+annotation('line', [x2norm(x_zoom2(2)), inset_pos2(1) + inset_pos2(3)], ...
+                   [y2norm(y_zoom2(2)), inset_pos2(2)], ...
+                   'LineStyle', '--', 'LineWidth', 1.5, 'Color', 'k');
+
+
+% =========================================================================
+% FIGURE 2: PRESSURE GRADIENT TERM
+% =========================================================================
+L = 4.356 * 0.2;
+color_total = 'k';              
+color_base  = [0.8 0 0];        
+color_shade = [0.95 0.8 0.8];   
+smooth_method = 'sgolay'; 
+
+S_row = S(:)';
+X_fill = [S_row, fliplr(S_row)] / L;
+% --- SMOOTHING STEP ---
+Cf_PG_cart_sm = smoothdata(Cf_PG_cart, smooth_method);
+Cf_PG_sm      = smoothdata(Cf_PG, smooth_method);
+
+% --- 1. SETUP MAIN FIGURE & AXES ---
+fig2 = figure('Position', [450, 150, 900, 400], 'Name', 'PG Term');
+ax_main2 = axes('Position', [0.1, 0.15, 0.85, 0.8]);
+hold(ax_main2, 'on'); box(ax_main2, 'on');
+
+Y_fill_PG = [Cf_PG_cart_sm(:)', fliplr(Cf_PG_sm(:)')];
+
+% --- 2. PLOT MAIN DATA ---
+plot(ax_main2, S/L, Cf_PG_sm, '-', 'Color', color_total, 'LineWidth', 2, ...
+    'DisplayName', 'Total $C_{PG}$');
+plot(ax_main2, S/L, Cf_PG_cart_sm, '--', 'Color', color_base, 'LineWidth', 2, ...
+    'DisplayName', 'Cartesian Term $C_{PG}^{cart}$');
+fill(ax_main2, X_fill, Y_fill_PG, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', ...
+    'DisplayName', 'Geometric Effect $C_{PG}^{geo}$');
+
+
+yline(ax_main2, 0, 'k-', 'LineWidth', 0.8, 'HandleVisibility', 'off');
+
+% Format Main Axes
+set(ax_main2, 'FontSize', 14, 'LineWidth', 1.2);
+xlabel(ax_main2, '$s/L$', 'FontSize', 18);
+legend(ax_main2, 'Location', 'northeast', 'FontSize', 14);
+xlim(ax_main2, [0, 0.7]);
+% ylim(ax_main2, [-0.01, 0.04]); % TWEAK THIS LIMIT BASED ON YOUR PG DATA
+grid(ax_main2, 'off');
+
+% --- 3. ZOOM REGION ---
+xl2 = xlim(ax_main2); yl2 = ylim(ax_main2); pos2 = get(ax_main2, 'Position');
+x2norm_2 = @(x) pos2(1) + (x - xl2(1)) / (xl2(2) - xl2(1)) * pos2(3);
+y2norm_2 = @(y) pos2(2) + (y - yl2(1)) / (yl2(2) - yl2(1)) * pos2(4);
+
+x_zoom_PG = [0.010, 0.038];  % TWEAK LOCATION
+y_zoom_PG = [0.028, 0.035];  % TWEAK LOCATION
+
+plot(ax_main2, [x_zoom_PG(1) x_zoom_PG(2) x_zoom_PG(2) x_zoom_PG(1) x_zoom_PG(1)], ...
+               [y_zoom_PG(1) y_zoom_PG(1) y_zoom_PG(2) y_zoom_PG(2) y_zoom_PG(1)], ...
+               'k--', 'LineWidth', 1.5, 'HandleVisibility', 'off');
+
+inset_pos_PG = [0.25, 0.6, 0.1, 0.3]; 
+ax_inset2 = axes('Position', inset_pos_PG);
+hold(ax_inset2, 'on'); box(ax_inset2, 'on');
+
+fill(ax_inset2, X_fill, Y_fill_PG, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', 'HandleVisibility', 'off');
+plot(ax_inset2, S/L, Cf_PG_cart_sm, '--', 'Color', color_base, 'LineWidth', 2, 'HandleVisibility', 'off');
+plot(ax_inset2, S/L, Cf_PG_sm, '-', 'Color', color_total, 'LineWidth', 2, 'HandleVisibility', 'off');
+
+xlim(ax_inset2, x_zoom_PG); ylim(ax_inset2, y_zoom_PG);
+set(ax_inset2, 'XTick', [], 'YTick', [], 'LineWidth', 1.2);
+
+annotation('line', [x2norm_2(x_zoom_PG(2)), inset_pos_PG(1)], [y2norm_2(y_zoom_PG(2)), inset_pos_PG(2) + inset_pos_PG(4)], 'LineStyle', '--', 'LineWidth', 1.5, 'Color', 'k');
+annotation('line', [x2norm_2(x_zoom_PG(2)), inset_pos_PG(1)], [y2norm_2(y_zoom_PG(1)), inset_pos_PG(2)], 'LineStyle', '--', 'LineWidth', 1.5, 'Color', 'k');
+
+% =========================================================================
+% --- 4. SECOND ZOOM REGION  ---
+% =========================================================================
+x_zoom2 = [0.22, 0.3];
+y_zoom2 = [-0.006, -0.003]; 
+
+% Draw bounding box
+plot(ax_main2, [x_zoom2(1) x_zoom2(2) x_zoom2(2) x_zoom2(1) x_zoom2(1)], ...
+              [y_zoom2(1) y_zoom2(1) y_zoom2(2) y_zoom2(2) y_zoom2(1)], ...
+              'k--', 'LineWidth', 1.5, 'HandleVisibility', 'off');
+
+% Create Inset Axes 3 (Placed in the middle-top area)
+% (Renamed to ax_inset3 to avoid overwriting the first inset ax_inset2)
+inset_pos2 = [0.50, 0.4, 0.18, 0.1]; 
+ax_inset3 = axes('Position', inset_pos2);
+hold(ax_inset3, 'on'); box(ax_inset3, 'on');
+
+% FIXED: Changed _nu variables to _PG variables
+fill(ax_inset3, X_fill, Y_fill_PG, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', 'HandleVisibility', 'off');
+plot(ax_inset3, S/L, Cf_PG_sm, '-', 'Color', color_total, 'LineWidth', 2, 'HandleVisibility', 'off');
+plot(ax_inset3, S/L, Cf_PG_cart_sm, '--', 'Color', color_base, 'LineWidth', 2, 'HandleVisibility', 'off');
+
+xlim(ax_inset3, x_zoom2); ylim(ax_inset3, y_zoom2);
+set(ax_inset3, 'XTick', [], 'YTick', [], 'LineWidth', 1.2);
+
+% FIXED: Changed x2norm -> x2norm_2 and y2norm -> y2norm_2
+% Connecting lines for Inset 2 (From UPPER EDGE of the dashed box to BOTTOM CORNERS of inset)
+% Line 1: Top-Left of bounding box -> Bottom-Left of inset
+annotation('line', [x2norm_2(x_zoom2(1)), inset_pos2(1)], ...
+                   [y2norm_2(y_zoom2(2)), inset_pos2(2)], ...
+                   'LineStyle', '--', 'LineWidth', 1.5, 'Color', 'k');
+
+% Line 2: Top-Right of bounding box -> Bottom-Right of inset
+annotation('line', [x2norm_2(x_zoom2(2)), inset_pos2(1) + inset_pos2(3)], ...
+                   [y2norm_2(y_zoom2(2)), inset_pos2(2)], ...
+                   'LineStyle', '--', 'LineWidth', 1.5, 'Color', 'k');
+
+
+
+% =========================================================================
+% FIGURE 3: CONVECTIVE TERM
+% =========================================================================
+
+% --- SMOOTHING STEP ---
+L = 4.356 * 0.2;
+color_total = 'k';              
+color_base  = [0.8 0 0];        
+color_shade = [0.95 0.8 0.8];   
+smooth_method = 'sgolay'; 
+
+Cf_C_cart_sm = smoothdata(Cf_C_cart, smooth_method);
+Cf_C_sm      = smoothdata(Cf_C, smooth_method);
+
+% --- 1. SETUP MAIN FIGURE & AXES ---
+fig3 = figure('Position', [450, 150, 900, 400], 'Name', 'Convective Geometric Effect');
+ax_main3 = axes('Position', [0.1, 0.15, 0.85, 0.8]);
+hold(ax_main3, 'on'); box(ax_main3, 'on');
+
+Y_fill_C = [Cf_C_cart_sm(:)', fliplr(Cf_C_sm(:)')];
+
+% --- 2. PLOT MAIN DATA ---
+plot(ax_main3, S/L, Cf_C_sm, '-', 'Color', color_total, 'LineWidth', 2, ...
+    'DisplayName', 'Total $C_{C}$');
+plot(ax_main3, S/L, Cf_C_cart_sm, '--', 'Color', color_base, 'LineWidth', 2, ...
+    'DisplayName', 'Cartesian Term $C_{C}^{cart}$');
+fill(ax_main3, X_fill, Y_fill_C, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', ...
+    'DisplayName', 'Geometric Effect $C_{C}^{geo}$');
+
+yline(ax_main3, 0, 'k-', 'LineWidth', 0.8, 'HandleVisibility', 'off');
+
+% Format Main Axes
+set(ax_main3, 'FontSize', 14, 'LineWidth', 1.2);
+xlabel(ax_main3, '$s/L$', 'FontSize', 18);
+legend(ax_main3, 'Location', 'northeast', 'FontSize', 14);
+xlim(ax_main3, [0, 0.7]);
+grid(ax_main3, 'off');
+
+
+
+
+% =========================================================================
+% FIGURE 4: DIFFUSION TERM
+% =========================================================================
+L = 4.356 * 0.2;
+color_total = 'k';              
+color_base  = [0.8 0 0];        
+color_shade = [0.95 0.8 0.8];   
+smooth_method = 'sgolay'; 
+
+S_row = S(:)';
+X_fill = [S_row, fliplr(S_row)] / L;
+
+% --- SMOOTHING STEP ---
+Cf_D_cart_sm = smoothdata(Cf_D_cart, smooth_method);
+Cf_D_sm      = smoothdata(Cf_D, smooth_method);
+
+% --- 1. SETUP MAIN FIGURE & AXES ---
+fig4 = figure('Position', [450, 150, 900, 400], 'Name', 'Diffusion Geometric Effect');
+ax_main4 = axes('Position', [0.1, 0.15, 0.85, 0.8]);
+hold(ax_main4, 'on'); box(ax_main4, 'on');
+
+Y_fill_D = [Cf_D_cart_sm(:)', fliplr(Cf_D_sm(:)')];
+
+% --- 2. PLOT MAIN DATA ---
+plot(ax_main4, S/L, Cf_D_sm, '-', 'Color', color_total, 'LineWidth', 2, ...
+    'DisplayName', 'Total $C_{D}$');
+plot(ax_main4, S/L, Cf_D_cart_sm, '--', 'Color', color_base, 'LineWidth', 2, ...
+    'DisplayName', 'Cartesian Term $C_{D}^{cart}$');
+fill(ax_main4, X_fill, Y_fill_D, color_shade, 'FaceAlpha', 0.8, 'EdgeColor', 'none', ...
+    'DisplayName', 'Geometric Effect $C_{D}^{geo}$');
+
+yline(ax_main4, 0, 'k-', 'LineWidth', 0.8, 'HandleVisibility', 'off');
+
+% Format Main Axes
+set(ax_main4, 'FontSize', 14, 'LineWidth', 1.2);
+xlabel(ax_main4, '$s/L$', 'FontSize', 18, 'Interpreter', 'latex');
+legend(ax_main4, 'Location', 'northeast', 'FontSize', 14, 'Interpreter', 'latex');
+xlim(ax_main4, [0, 0.7]);
+ylim(ax_main4, [-0.0001, 0.0001]);
+grid(ax_main4, 'off');
+
+
+

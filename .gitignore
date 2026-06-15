@@ -43,7 +43,11 @@ figure/
 log.*
 *.log
 log_run
-.out
+*.out
+
+*.png
+*.jpg
+*.txt
 
 # Ignore ParaView/Tecplot visualization links/data
 *.foam
