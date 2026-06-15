@@ -1,5 +1,5 @@
 clc; clear; close all;
-
+reset(groot)
 nu = 2.87362146e-05;
 Uref = 1.649194;     % New reference inflow velocity
 

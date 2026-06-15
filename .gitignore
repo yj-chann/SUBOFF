@@ -2,6 +2,8 @@
 # OpenFOAM Simulation Outputs & Mesh
 # ====================================================================
 
+*.sh
+Makefile
 
 # Ignore all parallel processing directories
 processor*/

@@ -1,14 +1,14 @@
 clc;clear;
 load('Mesh.mat')
 NS=980;NN=440;
-filename='../../01_2d_laminar_ADD/10000/U';
+filename='../../01_2d_laminar_ADD/20000/U';
 fid = fopen(filename, 'r');
 dataU=textscan(fid, '(%f %f %*f)', 'HeaderLines',23);
 fclose(fid);
 Ux=permute(flipud(reshape(dataU{1},NN,NS)),[2,1]);
 Uy=permute(flipud(reshape(dataU{2},NN,NS)),[2,1]);
 
-filename='../../01_2d_laminar_ADD/10000/p';
+filename='../../01_2d_laminar_ADD/20000/p';
 fid = fopen(filename, 'r');
 datap=textscan(fid, '%f', 'HeaderLines',23);
 fclose(fid);
