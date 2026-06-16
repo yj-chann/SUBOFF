@@ -183,6 +183,13 @@ for j = 1:NJ+1
 end
 fclose(fid);
 
+fid = fopen('Tecplot_InputFiles/CY_surface_XYZ.plt', 'w');
+for k = 1:NK
+    for j = 1:NJ+1
+        fprintf(fid, '%22.15E %22.15E %22.15E\n', CY_X(k,j) , CY_Y(k,j) , CY_Z(k,j) );
+    end
+end
+fclose(fid);
 
 
 % Calculate total points
