@@ -1,0 +1,5 @@
+      Implicit None
+	
+      Include 'mpif.h'
+      INCLUDE 'common.fi'
+

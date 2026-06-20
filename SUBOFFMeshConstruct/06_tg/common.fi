@@ -1,0 +1,14 @@
+!========================================!
+!      COMMON VARIABLE FOR PARALLEL      !
+!========================================!
+
+      INTEGER iMPI_MyID, iMPI_NumProcs, iMPI_ErrorInfo ! 当前进程编号（rank）;总进程数;MPI函数返回的错误码
+      INTEGER COORD ! 当前进程在二维网格中的位置
+      INTEGER MPI_COMM_CART,MPI_COMM_ROW,MPI_COMM_COL !笛卡尔拓扑通信器;行通信器;列通信器 (构成MPI通信域)
+      INTEGER DIMS(0:1) ! MPI网格划分（二维）
+      LOGICAL PERIODIC(0:1)
+
+      ! COMMON :全局变量
+      COMMON /Variables_MPI/ iMPI_MyID, iMPI_NumProcs, iMPI_ErrorInfo
+      COMMON /APICOORD/ COORD(0:1)
+      COMMON /NEWMPICOMMUNI/ MPI_COMM_CART,MPI_COMM_ROW,MPI_COMM_COL

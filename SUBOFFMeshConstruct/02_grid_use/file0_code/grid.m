@@ -16,7 +16,7 @@ YcellRatios = [10 , 70 , 70 , 50 , 20];
 YexpRatios  = [1 , 10.7, 3.9, 10.9 , 1];
 Y= splitEdge(YL, NN, YlenRatios, YcellRatios, YexpRatios);
 
-fid=fopen('Tecplot_InputFiles\Y.txt','w');
+fid=fopen('Y.txt','w');
 for i=1:NI+1
     fprintf(fid,'%22.18E\n',Y(i));
 end
@@ -56,7 +56,7 @@ for j = 1:NL+1
 end
 fclose(fid);
 
-fid = fopen('Tecplot_InputFiles/RECT_surface_XYZ.plt', 'w');
+fid = fopen('RECT_surface_XYZ.plt', 'w');
 for j = 1:NL+1
     for k = 1:NL+1
         fprintf(fid, '%22.15E %22.15E %22.15E\n', RECT_X(j,k) , RECT_Y(j,k) , RECT_Z(j,k) );
@@ -183,7 +183,7 @@ for j = 1:NJ+1
 end
 fclose(fid);
 
-fid = fopen('Tecplot_InputFiles/CY_surface_XYZ.plt', 'w');
+fid = fopen('CY_surface_XYZ.plt', 'w');
 for k = 1:NK
     for j = 1:NJ+1
         fprintf(fid, '%22.15E %22.15E %22.15E\n', CY_X(k,j) , CY_Y(k,j) , CY_Z(k,j) );
@@ -191,6 +191,7 @@ for k = 1:NK
 end
 fclose(fid);
 
+%% 
 
 % Calculate total points
 P_NUM = (NI+1)*(NJ+1)*NK + (NL-1)^2 * (NI+1);
@@ -264,7 +265,7 @@ fclose(fid);
 
 
 
-fid= fopen('Tecplot_InputFiles\suboff_mesh_2d.plt','w');
+fid= fopen('suboff_mesh_2d.plt','w');
 fprintf(fid,'ZONE T = "suboff_mesh_2d", I = %d, J = %d, F=POINT\n',NL/2+NJ+1,NI+1);
 for I=NI+1:-1:1
 for J=1:NL/2+NJ+1  
@@ -281,7 +282,7 @@ fclose(fid);
 
 
 
-fid= fopen('Tecplot_InputFiles\suboff_mesh_2d_ADD.plt','w');
+fid= fopen('suboff_mesh_2d_ADD.plt','w');
 fprintf(fid,'ZONE T = "suboff_mesh_2d_ADD", I = %d, J = %d, F=POINT\n',NS+1,NN+1);
 for I=NN+1:-1:1
 for J=1:NS+1  
