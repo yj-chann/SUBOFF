@@ -70,7 +70,10 @@ same indexing convention.
 
 The script opens output files using relative paths, so the run directory
 matters. If you run `grid.m` from another folder, MATLAB will write `points` and
-`Tecplot_InputFiles/*` relative to that current folder.
+`Tecplot_InputFiles/*` relative to that current folder. By convention,
+`Tecplot_InputFiles` contains Tecplot-header visualization/check files, while
+outputs written outside `Tecplot_InputFiles` are raw downstream files used by
+later mesh-construction or OpenFOAM steps.
 
 ## Important Resolution Variables
 
@@ -290,21 +293,24 @@ repeated streamwise planes.
 
 ## Output Files
 
-Running `grid.m` writes the following files.
+Running `grid.m` writes the following files. Files under `Tecplot_InputFiles`
+are intended for Tecplot visualization and grid inspection. Files generated
+outside `Tecplot_InputFiles`, such as `points`, are raw downstream files used in
+later steps.
 
 | File | Meaning |
 | --- | --- |
 | `points` | OpenFOAM v2312 `vectorField` containing all generated point coordinates. This is the file intended for `constant/polyMesh/points`. |
-| `Tecplot_InputFiles/Y.txt` | First `NI+1` wall-normal distances written for checking the OpenFOAM grid spacing. |
+| `Y.txt` | First `NI+1` wall-normal distances written for checking the OpenFOAM grid spacing. |
 | `Tecplot_InputFiles/RECT_surface.plt` | Tecplot surface file for the square H-type surface patch, including Tecplot headers. |
-| `Tecplot_InputFiles/RECT_surface_XYZ.plt` | Raw XYZ version of the square H-type surface patch. |
+| `RECT_surface_XYZ.plt` | XYZ coordinate dump of the square H-type surface patch for visualization/checking. |
 | `Tecplot_InputFiles/CY1_surface.plt` | Tecplot surface file for the H-to-O transition section. |
 | `Tecplot_InputFiles/CY2_surface.plt` | Tecplot surface file for the second O-type surface section. |
 | `Tecplot_InputFiles/CY3_surface.plt` | Tecplot surface file for the third O-type surface section. |
 | `Tecplot_InputFiles/CY_surface.plt` | Combined cylindrical/O-type surface with Tecplot headers. |
-| `Tecplot_InputFiles/CY_surface_XYZ.plt` | Raw XYZ version of the combined cylindrical/O-type surface. |
-| `Tecplot_InputFiles/suboff_mesh_2d.plt` | 2D meridional grid section using only the `NI+1` wall-normal nodes used by OpenFOAM. |
-| `Tecplot_InputFiles/suboff_mesh_2d_ADD.plt` | 2D meridional grid section including the extra `NI_ADD` wall-normal nodes and `NJ_ADD` streamwise node. Used for 2d calculation in the extended grading. |
+| `CY_surface_XYZ.plt` | XYZ coordinate dump of the combined cylindrical/O-type surface for visualization/checking. |
+| `suboff_mesh_2d.plt` | 2D meridional grid section using only the `NI+1` wall-normal nodes used by OpenFOAM. |
+| `suboff_mesh_2d_ADD.plt` | 2D meridional grid section including the extra `NI_ADD` wall-normal nodes and `NJ_ADD` streamwise node. Used for 2d calculation in the extended grading. |
 
 ## OpenFOAM Point Ordering
 
@@ -379,21 +385,6 @@ must be redesigned.
 - When changing grading ratios, inspect `suboff_mesh_2d.plt` and
   `suboff_mesh_2d_ADD.plt` before using the OpenFOAM mesh.
 
-## Suggested Validation Workflow
-
-Before using the output in a CFD case:
-
-1. Run a low-resolution test mesh.
-2. Open `suboff_mesh_2d.plt` in Tecplot or ParaView-compatible tooling and
-   check wall-normal spacing and streamwise clustering.
-3. Open `RECT_surface.plt` and verify that the square H-block cap is smooth and
-   centered on the nose.
-4. Open `CY_surface.plt` and check that the circumference closes cleanly.
-5. Check the first and last circumferential planes for duplicate or missing
-   points.
-6. Copy `points` into `constant/polyMesh/points` only after confirming that the
-   rest of the OpenFOAM `polyMesh` files were generated for the same dimensions
-   and ordering.
 
 ## Known Limitations
 
