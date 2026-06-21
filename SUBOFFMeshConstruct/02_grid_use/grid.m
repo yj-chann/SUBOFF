@@ -22,6 +22,12 @@ for i=1:NI+1
 end
 fclose(fid);
 
+fid=fopen('Y_ADD.txt','w');
+for i=1:NN+1
+    fprintf(fid,'%22.18E\n',Y(i));
+end
+fclose(fid);
+
 % Total Length and Total Cells
 SL = 0.65;
 NS = NL/2 + NJ + NJ_ADD;

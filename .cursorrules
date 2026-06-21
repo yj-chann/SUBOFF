@@ -1,0 +1,19 @@
+# SUBOFF Cursor Rules
+
+- At the start of every new chat in this workspace, read `EXPERIENCE.md` in this
+  directory before making plans or editing files.
+- Only modify files under `d:\OpenFOAM\v2312\SUBOFF`.
+  Do not edit parent repository files, sibling project folders, global Cursor
+  settings, or files outside this directory unless the user explicitly approves
+  that exact path.
+- Preserve existing user changes. Do not run destructive cleanup, reset, or
+  checkout commands unless explicitly requested.
+- Prefer local project conventions over generic advice. This project mixes
+  OpenFOAM v2312 case files, MATLAB and FORTRAN pre/post-processing scripts,
+  and shell run scripts.
+- When changing mesh dimensions, point ordering, boundary data, decomposition,
+  or generated OpenFOAM files, update the relevant README or `EXPERIENCE.md`
+  notes so the workflow remains reproducible.
+- Keep generated/check files conceptually separate from source scripts and
+  downstream OpenFOAM inputs. Document which files are for Tecplot inspection
+  and which are copied or consumed by later case steps.
