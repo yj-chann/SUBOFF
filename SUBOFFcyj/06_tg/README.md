@@ -35,9 +35,7 @@ the inlet grid. The second pass subtracts that sampled mean and adds the uniform
 streamwise velocity `UREF`. This makes the generated fluctuating component
 approximately zero-mean over the `NTALL` sampled time steps.
 
-The notes for the wider workflow also mention superposing the fluctuations on
-`PU_RECT_SUR.plt` from `05_ini_2d_RAS` to create a non-uniform inlet. In this
-folder snapshot, `tg_parallel.F90` does not read `PU_RECT_SUR.plt`; it adds the
+In this folder, `tg_parallel.F90` does not read `PU_RECT_SUR.plt`; it adds the
 uniform mean `UREF` in the second pass.
 
 ## Repository Layout
