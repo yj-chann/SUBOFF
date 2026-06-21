@@ -1,0 +1,4 @@
+      INTEGER NI,NK,NL
+      PARAMETER (NI=400,NK=640)
+      PARAMETER (NL=NK/4)
+

@@ -1,0 +1,2 @@
+	  INTEGER N2,N3,NI
+	  Parameter(NI=400,N2=160,N3=160)

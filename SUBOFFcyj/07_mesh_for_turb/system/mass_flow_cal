@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2312                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+//  div1
+// {
+//     // Mandatory entries
+//     type            div;
+//     libs ("libfieldFunctionObjects.so");
+//     field           U;
+
+//     // Optional (inherited) entries
+//     result          divU;
+//     region          region0;
+//     enabled         true;
+//     log             true;
+//     timeStart       0;
+//     timeEnd         100000;
+//     executeControl  timeStep;
+//     executeInterval 1;
+//     writeControl    timeStep;
+//     writeInterval   500;
+// }
+
+
+   inletletMassFlow
+   {
+        type            surfaceFieldValue;
+        libs ("libfieldFunctionObjects.so");
+        enabled         true;
+        writeControl    timeStep;
+        writeInterval   1;
+        log             true;
+        writeFields     false;
+        regionType      patch;
+        name            INLET;
+        operation       sum;
+        fields
+        (
+            phi
+        );
+   }
+    
+
+//    outletMassFlow
+//    {
+//         type            surfaceFieldValue;
+//         libs ("libfieldFunctionObjects.so");
+//         enabled         true;
+//         writeControl    timeStep;
+//         writeInterval   1;
+//         log             true;
+//         writeFields     false;
+//         regionType      patch;
+//         name            HULL;
+//         operation       sum;
+//         fields
+//         (
+//             phi
+//         );
+//    }

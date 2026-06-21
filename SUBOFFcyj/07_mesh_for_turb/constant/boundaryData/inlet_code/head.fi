@@ -1,0 +1,6 @@
+      Implicit None
+	
+      Include 'param.fi'
+      Include 'mpif.h'
+      INCLUDE 'common.fi'
+
