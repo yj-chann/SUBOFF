@@ -294,6 +294,10 @@
             ! 找到移动后的点所在的网格单元（三线性插值）
             IA=FLOOR((INLET_XP(I)+hdx)/dx)
             ip=IA-nx_st+1
+            IF (ip < 1 .OR. ip+1 > nxp) THEN
+                WRITE(*,*) 'ERROR ip out of range:', iMPI_MyID, ip, IA, nx_st, nx_ed
+                CALL MPI_ABORT(MPI_COMM_WORLD, 1, iMPI_ErrorInfo)
+            ENDIF
             JA=FLOOR((INLET_YP(I)+hdy)/dy)
             KA=FLOOR((INLET_ZP(I)+hdz)/dz)
             ! 插值u分量
@@ -406,7 +410,7 @@
             ENDDO
             ENDDO
             
-            ! 减去之前计算的平均湍流场，得到纯脉动速度（保证均值为0）
+            ! 减去之前计算的平均湍流场，得到纯脉动速度（保证脉动时间均值为0）
             UIN_NEW=UIN-USUM
             
             ! 存储中心点时间序列（修正后）
@@ -423,10 +427,10 @@
         
             ! 如果是0号进程且第一个时刻，输出修正后的入口速度场（包含坐标）
             IF (iMPI_MyID.EQ.0.AND.NNT.EQ.1) THEN
-                OPEN(1,FILE='Tecplot_InputFiles/u_Modify_INLET.plt',STATUS='UNKNOWN')  
-                WRITE(1, '(A)') 'TITLE = "u_Modify_INLET"'
+                OPEN(1,FILE='Tecplot_InputFiles/UModify_INLET.plt',STATUS='UNKNOWN')  
+                WRITE(1, '(A)') 'TITLE = "UModify_INLET"'
                 WRITE(1, '(A)') 'VARIABLES = "X", "Y", "Z","u","v","w"'
-                WRITE(1, '(A, I0, A, I0, A)') 'ZONE T="u_Modify_INLET", I=', N1, ', J=', N1, ', F=POINT'
+                WRITE(1, '(A, I0, A, I0, A)') 'ZONE T="UModify_INLET", I=', N1, ', J=', N1, ', F=POINT'
                 DO I=1,NXALL
                     WRITE(1,101) INLET_X(I),INLET_Y(I),INLET_Z(I),UIN_NEW(1,I),UIN_NEW(2,I),UIN_NEW(3,I)
                 ENDDO

@@ -2,11 +2,10 @@ PROGRAM cylinder_main
 IMPLICIT NONE
 INCLUDE 'cylinder.h'
 
-REAL*8 X0(M1,M2),Y0(M1,M2),THETA1,THETA2,UREFX
+REAL*8 X0(M1,M2),Y0(M1,M2),UREFX
 REAL*8 X_CY(NJ+1,NK),Y_CY(NJ+1,NK),Z_CY(NJ+1,NK)
 REAL*8 X_RECT(NL+1,NL+1),Y_RECT(NL+1,NL+1),Z_RECT(NL+1,NL+1)
 REAL*8 PAI
-REAL*8 X,Y,Z
 REAL*8 PREF(N1,N2),UREF(2,N1,N2),U1,U2,U3
 REAL*8 PREF_IN(N2),UREF_IN(2,N2)
 REAL*8 X_IN(N2),Y_IN(N2)
@@ -102,7 +101,7 @@ DO J=1,NL
 ENDDO
 ENDDO
 
-! interpolation from 2d data to square-part2&3(INLET2) data according to x coordinate
+! interpolation from 2d data to cylinder-part2&3(INLET2) data according to x coordinate
 DO K=1,NK
 DO J=1,NJ
     DO II=1,N2
