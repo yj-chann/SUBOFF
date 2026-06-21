@@ -1,0 +1,5 @@
+      INTEGER M1,M2,M3
+	INTEGER N1,N2,N3
+      Parameter(M1=400+1+40,M2=980+1+1,M3=640)
+	Parameter(N1=M1-1,N2=M2-1,N3=M3)
+

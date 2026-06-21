@@ -15,12 +15,13 @@
  // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
  application     simpleFoam;
  startFrom       startTime;
+//  startFrom       latestTime;
  startTime       0;
  stopAt          endTime;
- endTime         20000;
+ endTime         50000;
  deltaT          1;
  writeControl    timeStep;
- writeInterval   5000;
+ writeInterval   10000;
  purgeWrite      0;
  writeFormat     ascii;
  writePrecision  15;
@@ -49,13 +50,5 @@
     //       );
     //  }
 
-    ReynoldsStress
-    {
-        type            turbulenceFields;
-        libs            (fieldFunctionObjects);
-        fields          (R);
-        
-        executeControl  writeTime;
-        writeControl    writeTime;
-    }
+
  }
