@@ -4,7 +4,6 @@
     INCLUDE 'cylinder.h'
 
     REAL*8 INLET_X(NALL),INLET_Y(NALL),INLET_Z(NALL)
-    REAL*8 PAI
     INTEGER*8 I,IP
     CHARACTER*200 CHAR1
  
@@ -24,7 +23,7 @@
     WRITE(20, '(A)') 'VARIABLES = "X", "Y", "Z"'
     WRITE(20, '(A, I0, A, I0, A)') 'ZONE T="Turb_Inlet", I=', N, ', J=', N, ', F=POINT'
     DO I = 1, NALL
-            WRITE(20, '(3ES22.15,2X)') INLET_X(I),INLET_Y(I),INLET_Z(I)
+        WRITE(20, '(3(ES22.15,2X))') INLET_X(I),INLET_Y(I),INLET_Z(I)
     END DO
     CLOSE(20)
     

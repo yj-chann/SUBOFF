@@ -3,7 +3,7 @@
 # ====================================================================
 
 # *.sh
-Makefile
+# Makefile
 
 # Ignore all parallel processing directories
 processor*/
