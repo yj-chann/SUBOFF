@@ -1,6 +1,5 @@
       INTEGER  NPR ,   NPC
       INTEGER  NPP    
-     !PARAMETER( NPR  = 200 ,   NPC = 1)    
       PARAMETER( NPR  = 100 ,   NPC = 1)    
       PARAMETER( NPP = NPR * NPC )     
 
