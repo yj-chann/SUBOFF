@@ -75,7 +75,7 @@ Run each command from the directory named in the step.
 
    - `simpleFoam` is the solver.
    - `simulationType RAS` with `kOmegaSST` is used.
-   - `blockMeshDict` uses `(440 981 1)`, matching `M1=441` and `M2=982`.
+   - `blockMeshDict` uses `(220 1001 1)`, matching `M1=221` and `M2=1002`.
    - `FRONT` and `BACK` are wedge patches; `AXIS` is empty.
 
 2. From `05_ini_2d_RAS`, run `blockMesh` to generate `constant/polyMesh`.
@@ -180,13 +180,13 @@ The grid dimensions must stay consistent across `blockMeshDict`, both
 
 | Location | Parameter | Meaning |
 | --- | --- | --- |
-| `system/blockMeshDict` | `(440 981 1)` | Cell dimensions for the 2D wedge helper mesh. |
-| `constant/polyMesh_yuanshi/cylinder.h` | `M1=400+1+40` | Wall-normal point count from `suboff_mesh_2d_ADD.plt`; default `441`. |
-| `constant/polyMesh_yuanshi/cylinder.h` | `M2=980+1+1` | Streamwise point count from `suboff_mesh_2d_ADD.plt`; default `982`. |
+| `system/blockMeshDict` | `(220 1001 1)` | Cell dimensions for the 2D wedge helper mesh. |
+| `constant/polyMesh_yuanshi/cylinder.h` | `M1=200+1+20` | Wall-normal point count from `suboff_mesh_2d_ADD.plt`; default `221`. |
+| `constant/polyMesh_yuanshi/cylinder.h` | `M2=1000+1+1` | Streamwise point count from `suboff_mesh_2d_ADD.plt`; default `1002`. |
 | `constant/polyMesh_yuanshi/cylinder.h` | `M3=640` | Circumferential count used to set the wedge angles. |
-| `get_ini_p_u/cylinder.h` | `NI=400` | Original OpenFOAM wall-normal index count. |
+| `get_ini_p_u/cylinder.h` | `NI=200` | Original OpenFOAM wall-normal index count. |
 | `get_ini_p_u/cylinder.h` | `NL=NK/4` | Square inlet side resolution; default `160`. |
-| `get_ini_p_u/cylinder.h` | `NJ=NJ1+NJ2+NJ3` | O-grid streamwise count; default `900`. |
+| `get_ini_p_u/cylinder.h` | `NJ=NJ1+NJ2+NJ3` | O-grid streamwise count; default `920`. |
 | `get_ini_p_u/cylinder.h` | `NK=640` | O-grid circumferential count. |
 | `system/decomposeParDict` | `numberOfSubdomains 64` | Parallel decomposition count for the OpenFOAM solve. |
 

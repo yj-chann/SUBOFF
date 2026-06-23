@@ -57,7 +57,7 @@ Run each command from the directory named in the step.
    Important defaults:
 
    - `nx 3`: creates four helper point layers in the streamwise direction.
-   - `ny 900`: matches `NJ=NJ1+NJ2+NJ3`.
+   - `ny 920`: matches `NJ=NJ1+NJ2+NJ3`.
    - `nz 640`: matches `NK`.
    - `INLET`: patch exported later by `writeMeshObj`.
 
@@ -148,11 +148,11 @@ The grid dimensions must stay consistent across `blockMeshDict`,
 
 | Location | Parameter | Meaning |
 | --- | --- | --- |
-| `constant/polyMesh_yuanshi/parameter.h` | `NJ1=150`, `NJ2=450`, `NJ3=300` | Streamwise O-grid sections from the upstream mesh. |
-| `constant/polyMesh_yuanshi/parameter.h` | `NJ=NJ1+NJ2+NJ3` | Total streamwise inlet count; default `NJ=900`. |
+| `constant/polyMesh_yuanshi/parameter.h` | `NJ1=150`, `NJ2=450`, `NJ3=320` | Streamwise O-grid sections from the upstream mesh. |
+| `constant/polyMesh_yuanshi/parameter.h` | `NJ=NJ1+NJ2+NJ3` | Total streamwise inlet count; default `NJ=920`. |
 | `constant/polyMesh_yuanshi/parameter.h` | `NK=640` | Circumferential O-grid resolution. |
-| `constant/polyMesh_yuanshi/parameter.h` | `NI=400` | Wall-normal index range read from `Y.txt`. |
-| `system/blockMeshDict` | `ny 900` | Inlet patch streamwise face count; must match `NJ`. |
+| `constant/polyMesh_yuanshi/parameter.h` | `NI=200` | Wall-normal index range read from `Y.txt`. |
+| `system/blockMeshDict` | `ny 920` | Inlet patch streamwise face count; must match `NJ`. |
 | `system/blockMeshDict` | `nz 640` | Inlet patch circumferential face count; must match `NK`. |
 | `system/blockMeshDict` | `nx 3` | Creates four helper point layers, matching the `grid.f90` loop `I=0,3`. |
 | `cylinder.h` | `NALL=NK*NJ` | Total number of inlet patch points written to `INLET2.plt`. |

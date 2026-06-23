@@ -52,21 +52,16 @@ same indexing convention.
 ## Quick Start
 
 1. Open MATLAB.
-2. Change the MATLAB working directory to `file0_code`.
-3. Make sure `Tecplot_InputFiles` exists.
-4. Run:
+2. Make sure `Tecplot_InputFiles` exists.
+3. Run:
 
    ```matlab
    grid
    ```
 
-5. Inspect the Tecplot files first, especially `suboff_mesh_2d.plt`,
+4. Inspect the Tecplot files first, especially `suboff_mesh_2d.plt`,
    `RECT_surface.plt`, and `CY_surface.plt`.
-6. Move or copy the generated `points` file into the OpenFOAM case path:
 
-   ```text
-   09_3d_startup/constant/polyMesh/points
-   ```
 
 The script opens output files using relative paths, so the run directory
 matters. If you run `grid.m` from another folder, MATLAB will write `points` and
@@ -80,9 +75,9 @@ later mesh-construction or OpenFOAM steps.
 The main resolution controls are at the top of `grid.m`:
 
 ```matlab
-NJ1=150; NJ2=450; NJ3=300; NK=640;
+NJ1=150; NJ2=450; NJ3=320; NK=640;
 NL=NK/4; NJ=NJ1+NJ2+NJ3;
-NI=400; NI_ADD=40; NJ_ADD=1;
+NI=200; NI_ADD=20; NJ_ADD=1;
 ```
 
 Their meanings are:
@@ -103,7 +98,7 @@ With the default values, the point count is:
 
 ```text
 P_NUM = (NI+1)*(NJ+1)*NK + (NL-1)^2*(NI+1)
-      = 241,370,321 points
+      = 123,558,921 points
 ```
 
 This is a very large ASCII `points` file. Use a much smaller trial resolution
