@@ -43,6 +43,10 @@ SexpRatios  = [1, 1.1 , 4 , 1];
 S = splitEdge(SL, NS, SlenRatios, ScellRatios, SexpRatios);
 X = Get_x_from_S(S);
 
+% plot(S)
+
+
+
 % RECT_Y(J,K) RECT_Z(J,K) RECT_R(J,K)
 RECT_L = 2 * Get_R(X(NL/2+1));
 RECT_Y = transpose(linspace(-0.5*RECT_L,0.5*RECT_L,NL+1))*ones(1,NL+1);
