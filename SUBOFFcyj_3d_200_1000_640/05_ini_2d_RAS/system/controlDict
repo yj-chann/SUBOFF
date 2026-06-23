@@ -24,7 +24,7 @@
  writeInterval   10000;
  purgeWrite      0;
  writeFormat     ascii;
- writePrecision  15;
+ writePrecision  14;
  writeCompression off;
  timeFormat      general;
  timePrecision   6;

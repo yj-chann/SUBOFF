@@ -1,9 +1,9 @@
 clc;clear;
 % L=0.8712 R=0.0508
 
-NJ1=150; NJ2=450; NJ3=300; NK=640; 
+NJ1=150; NJ2=450; NJ3=320; NK=640; 
 NL=NK/4; NJ=NJ1+NJ2+NJ3;
-NI=400;NI_ADD=40;NJ_ADD=1;% GHOST
+NI=200;NI_ADD=20;NJ_ADD=1;% GHOST
 % ----------------------%
 
 
@@ -43,7 +43,8 @@ SexpRatios  = [1, 1.1 , 4 , 1];
 S = splitEdge(SL, NS, SlenRatios, ScellRatios, SexpRatios);
 X = Get_x_from_S(S);
 
-% plot(S)
+% plot(S(2:end)-S(1:end-1))
+
 
 
 
@@ -274,6 +275,7 @@ fprintf(fid, '// ***************************************************************
 fclose(fid);
 
 
+%% 
 
 fid= fopen('suboff_mesh_2d.plt','w');
 fprintf(fid,'ZONE T = "suboff_mesh_2d", I = %d, J = %d, F=POINT\n',NL/2+NJ+1,NI+1);

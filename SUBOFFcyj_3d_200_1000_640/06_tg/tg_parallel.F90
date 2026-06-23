@@ -241,10 +241,13 @@
         
         
             ! 输出von Kármán-Pao能谱曲线到Tecplot文件
-            IF (iMPI_MyID.EQ.0) OPEN(70,FILE='Tecplot_InputFiles/von Karman-Pao.plt',STATUS='UNKNOWN')
-            WRITE(70, '(A)') 'TITLE = "von Karman-Pao"'
-            WRITE(70, '(A)') 'VARIABLES = "k", "E"'
-            WRITE(70, '(A, I0, A)') 'ZONE T="von Karman-Pao", I=', nModes+1, ', F=POINT'
+            IF (iMPI_MyID.EQ.0) THEN
+                OPEN(70,FILE='Tecplot_InputFiles/von Karman-Pao.plt',STATUS='UNKNOWN')
+                WRITE(70, '(A)') 'TITLE = "von Karman-Pao"'
+                WRITE(70, '(A)') 'VARIABLES = "k", "E"'
+                WRITE(70, '(A, I0, A)') 'ZONE T="von Karman-Pao", I=', nModes+1, ', F=POINT'
+            ENDIF
+            
             ! 更新速度幅值向量：根据能谱值缩放
             Do i=0,nModes
             call karman(km(i),Ekm)     ! 计算能谱值E(k)
@@ -410,7 +413,7 @@
             ENDDO
             ENDDO
             
-            ! 减去之前计算的平均湍流场，得到纯脉动速度（保证脉动时间均值为0）
+            ! 减去之前计算的平均湍流场，得到纯脉动速度（保证均值为0）
             UIN_NEW=UIN-USUM
             
             ! 存储中心点时间序列（修正后）

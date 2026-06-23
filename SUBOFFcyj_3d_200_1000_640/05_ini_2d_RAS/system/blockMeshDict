@@ -30,7 +30,7 @@ vertices
 blocks
 (
     hex (0 1 2 3 0 1 4 5)
-    (440 981 1)
+    (220 1001 1)
     simpleGrading (1.0 1.0 1.0)
 );
 

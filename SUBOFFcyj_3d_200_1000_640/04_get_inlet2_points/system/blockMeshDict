@@ -20,7 +20,7 @@ scales 1;
 lx 3;
 r 60;
 nx 3;
-ny 900;
+ny 920;
 nz 640;
 
 vertices

@@ -2,7 +2,7 @@
 #SBATCH -p vip_21
 #SBATCH -N 1
 #SBATCH -n 64
-#SBATCH -J SUB_03_inlet1_runOF
+#SBATCH -J SUB_04_inlet2_runOF
 
 
 module purge

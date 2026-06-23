@@ -5,3 +5,4 @@ make
 ./cylinder.e
 rm -rf cylinder.o
 rm -rf cylinder.e
+rm *.out
