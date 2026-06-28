@@ -1,12 +1,12 @@
 clc;clear;
 NN = 440;
-NS = 981;
+NS = 1001;
 NN_PLUS_ONE = NN+1;
 NS_PLUS_ONE = NS+1 ;
 NK = 640;
 L=4.356*0.2;
 
-data=readmatrix('suboff_mesh_2d_ADD.plt','FileType','text','NumHeaderLines',1);
+data=readmatrix('ReadData/suboff_mesh_2d_ADD.plt','FileType','text','NumHeaderLines',1);
 X0 = reshape(data(:,1), NS_PLUS_ONE, NN_PLUS_ONE)';
 Y0 = reshape(data(:,2), NS_PLUS_ONE, NN_PLUS_ONE)';
 X0_WALL=X0(NN_PLUS_ONE,:);

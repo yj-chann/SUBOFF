@@ -1,5 +1,5 @@
 clc;clear;
-load('Mesh.mat')
+load('ReadData/Mesh.mat')
 NS=981;NN=440;
 filename='../../05_ini_2d_RAS/50000/U';
 fid = fopen(filename, 'r');
