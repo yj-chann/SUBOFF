@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2312                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    pcorr
+    {
+        solver          GAMG;
+        tolerance       1e-2;
+        relTol          0;
+        smoother        DICGaussSeidel;
+        cacheAgglomeration no;
+        maxIter         100;
+    }
+
+    p
+    {
+        $pcorr;
+        tolerance       5e-6;//5e-6,5e-5
+        relTol          0.01;
+    }
+
+    pFinal
+    {
+        $p;
+        tolerance       5e-6;//5e-6,5e-5
+        relTol          0;
+    }
+
+    "(U|k|epsilon|nuTilda)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       5e-6;//5e-6
+        relTol          0.05;
+    }
+
+    "(U|k|epsilon|nuTilda)Final"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       5e-6;//5e-6
+        relTol          0;
+    }
+}
+
+PIMPLE
+{
+    correctPhi          yes;
+    nOuterCorrectors    2;
+    nCorrectors         3;
+    nNonOrthogonalCorrectors 3;//1
+}
+
+relaxationFactors
+{
+    "(U|k|epsilon|nuTilda).*"       0.7; // Under-relax early outer loops
+    "(U|k|epsilon|nuTilda)Final"    1.0; // Remove relaxation on the final outer loop
+}
+
+cache
+{
+    grad(U);
+}
+
+// ************************************************************************* //

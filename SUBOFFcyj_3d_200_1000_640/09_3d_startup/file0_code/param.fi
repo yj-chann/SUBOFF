@@ -1,0 +1,8 @@
+      INTEGER  NPR ,   NPC
+      INTEGER  NPP    
+      PARAMETER( NPR  = PNI ,   NPC = PNJ+PNL*PNL )    
+	PARAMETER( NPP = NPR * NPC )     
+
+      
+      
+      

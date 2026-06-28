@@ -1,0 +1,203 @@
+ /*--------------------------------*- C++ -*----------------------------------*\
+   =========                 |
+   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+    \\    /   O peration     | Website:  https://openfoam.org
+     \\  /    A nd           | Version:  v2312
+      \\/     M anipulation  |
+ \*---------------------------------------------------------------------------*/
+ FoamFile
+ {
+     version     2.0;
+     format      ascii;
+     class       dictionary;
+     object      controlDict;
+ }
+ // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+ application     pimpleFoam;
+ startFrom       startTime;
+ startTime       0;
+ stopAt          endTime;
+ endTime         1.0  ;
+
+  adjustTimeStep  yes;
+  maxCo           5;    // Start with 5. If stable, you can push this to 10 or 20.
+  maxDeltaT       0.5;  // Set a ceiling for how large the time step can get
+  deltaT          2e-4; // Start with a very small step to survive the initial shock
+
+ writeControl    adjustableRunTime;
+ writeInterval   0.25 ;
+ 
+ purgeWrite      0;
+ writeFormat     ascii;
+ writePrecision  14;
+ writeCompression off;
+ timeFormat      general;
+ timePrecision   8;
+ runTimeModifiable false;
+
+
+ functions
+ {
+    //  #include "FOcomponents"
+
+    //  probes1_single
+    //  {
+    //      type            probes;
+    //      libs            ("libsampling.so");
+    //      writeControl    timeStep;
+    //      writeInterval   2;
+    //      timeStart      3.35;
+    //      timeEnd        1000000;
+    //      fields
+    //      (
+    //          p  Ux Uy Uz
+    //       );
+    //      probeLocations
+    //      (
+    //      (-0.224 0 0)
+    //      (-0.22 0 0)
+    //      (-0.21 0 0)
+    //      ( -0.2  0 0 )
+    //      ( -0.18  0 0 )
+    //      ( -0.15  0 0 )
+    //      ( -0.12  0 0 )
+    //      ( -0.09  0 0 )
+    //      ( -0.07  0 0 )
+    //      ( -0.05  0 0 )
+    //      ( -0.03  0 0 )
+    //      ( -0.02  0 0 )
+    //      ( -0.01  0 0 )
+    //      ( -0.005  0 0 )
+    //      ( -0.002  0 0 )
+    //     );
+    //  }
+
+    //  sample_bl0
+    //  {
+    //      fields
+    //      (
+    //          p  Ux Uy Uz 
+    //       );
+    //      interpolationScheme cellPoint;
+    //      setFormat       raw;
+    //      setConfig
+    //      {
+    //      type            cloud;
+    //      axis            xyz;
+    //      ordered         yes;
+    //      points (
+    //      #include     "sample0.c"
+    //     // (-0.001 0.02 0.02)
+    //      );
+    //      }
+    //      type            sets;
+    //      libs            ("libsampling.so");
+    //      writeControl    timeStep;
+    //      writeInterval     50 ;
+    //      timeStart         0.5     ;
+    //      timeEnd        1000000;
+    //      sets
+    //      (
+    //      cloud
+    //      {
+    //          $setConfig;
+    //      }
+    //      );
+    //  }
+    //  sample_bl1
+    //  {
+    //      fields
+    //      (
+    //          p  Ux Uy Uz 
+    //       );
+    //      interpolationScheme cellPoint;
+    //      setFormat       raw;
+    //      setConfig
+    //      {
+    //      type            cloud;
+    //      axis            xyz;
+    //      ordered         yes;
+    //      points (
+    //      #include     "sample1.c"
+    //     // (-0.001 0.02 0.02)
+    //      );
+    //      }
+    //      type            sets;
+    //      libs            ("libsampling.so");
+    //      writeControl    timeStep;
+    //      writeInterval     2 ;
+    //      timeStart         3.35      ;
+    //      timeEnd        1000000;
+    //      sets
+    //      (
+    //      cloud
+    //      {
+    //          $setConfig;
+    //      }
+    //      );
+    //  }
+
+
+    // sampleBL0
+    //  {
+    //      fields
+    //      (
+    //          p  Ux Uy Uz 
+    //       );
+    //      interpolationScheme cellPoint;
+    //      setFormat       raw;
+    //      setConfig
+    //      {
+    //      type            cloud;
+    //      axis            xyz;
+    //      ordered         yes;
+    //      points (
+    //      #include     "sampleBL0.c"
+    //     // (-0.001 0.02 0.02)
+    //      );
+    //      }
+    //      type            sets;
+    //      libs            ("libsampling.so");
+    //      writeControl    timeStep;
+    //      writeInterval     50 ;
+    //      timeStart         2.7     ;
+    //      timeEnd        1000000;
+    //      sets
+    //      (
+    //      cloud
+    //      {
+    //          $setConfig;
+    //      }
+    //      );
+    //  }
+   
+    // fieldAverage1
+    // {
+    //     type            fieldAverage;
+    //     libs            (fieldFunctionObjects);
+        
+    //     // 关键时间控制
+    //     timeStart       3.35;       // 建议从流场已经充分发展的时刻开始统计
+    //     writeControl    writeTime;  // 随 controlDict 中的 writeInterval 同步输出
+        
+    //     fields
+    //     (
+    //         U
+    //         {
+    //             mean        on;     // 开启平均速度计算 (生成 UMean)
+    //             prime2Mean  on;     // 开启速度脉动均方根计算 (生成 UPrime2Mean，即雷诺应力)
+    //             base        time;   // 瞬态计算必须使用物理时间(time)作为基准
+    //         }
+    //         p
+    //         {
+    //             mean        on;     // 开启平均压力计算 (生成 pMean)
+    //             prime2Mean  off;    // 通常关闭。除非你需要研究压力脉动(如气动声学)，则设为 on (生成 pPrime2Mean)
+    //             base        time;
+    //         }
+    //     );
+    // }
+    
+     
+ }
+  
+ // ************************************************************************* //
