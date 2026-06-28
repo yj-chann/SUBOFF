@@ -14,12 +14,19 @@ processor*/
 
 *.bak
 
+*.mod
+*.o
+*.e
+*.zf
+*.cyj
+
 uniform/
 phi
 
 # EXCEPT initial conditions & backup configurations
 ![0]/
 !0.orig/
+!10_*/
 09_3d_testfile/
 08_massflow_probes/
 UINLET_PREPLOT.BAK/
