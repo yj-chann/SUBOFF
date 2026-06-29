@@ -1,14 +1,14 @@
 clc;clear;
 load('ReadData/Mesh.mat')
-NS=981;NN=440;
-filename='../../05_ini_2d_RAS/50000/U';
+NS=1001;NN=440;
+filename='../../05_ini_2d_RAS/100000/U';
 fid = fopen(filename, 'r');
 dataU=textscan(fid, '(%f %f %*f)', 'HeaderLines',23);
 fclose(fid);
 Ux=permute(flipud(reshape(dataU{1},NN,NS)),[2,1]);
 Uy=permute(flipud(reshape(dataU{2},NN,NS)),[2,1]);
 
-filename='../../05_ini_2d_RAS/50000/p';
+filename='../../05_ini_2d_RAS/100000/p';
 fid = fopen(filename, 'r');
 datap=textscan(fid, '%f', 'HeaderLines',23);
 fclose(fid);
@@ -21,7 +21,7 @@ flow_field.Un=Un;
 flow_field.p=p;
 
 
-filename='../../05_ini_2d_RAS/50000/R';
+filename='../../05_ini_2d_RAS/100000/R';
 fid = fopen(filename, 'r');
 % OpenFOAM symmTensor syntax: (Rxx Rxy Rxz Ryy Ryz Rzz)
 dataR=textscan(fid, '(%f %f %*f %f %*f %f)', 'HeaderLines',23); 
@@ -56,7 +56,17 @@ save('flow_field.mat',"flow_field")
 contourf(X/0.8712,Y/0.8712,Us,200,'LineStyle','none')
 axis equal
 
-%%
-plot(N,Us(662,:))
+%% 
+
+plot(N,Us(661,:))
 hold on
-plot(N,Us(66,:))
+plot(N,Us(662,:))
+plot(N,Us(663,:))
+plot(N,Us(664,:))
+%% 
+[~,idx99]=max(Us(661,:))
+[~,idx99]=max(Us(662,:))
+N(idx99)
+[~,idx99]=max(Us(663,:))
+[~,idx99]=max(Us(664,:))
+N(idx99)

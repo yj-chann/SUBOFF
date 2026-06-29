@@ -75,7 +75,7 @@ Run each command from the directory named in the step.
 
    - `simpleFoam` is the solver.
    - `simulationType RAS` with `kOmegaSST` is used.
-   - `blockMeshDict` uses `(220 1001 1)`, matching `M1=221` and `M2=1002`.
+   - `blockMeshDict` uses `(440 1001 1)`, matching `M1=221` and `M2=1002`.
    - `FRONT` and `BACK` are wedge patches; `AXIS` is empty.
 
 2. From `05_ini_2d_RAS`, run `blockMesh` to generate `constant/polyMesh`.

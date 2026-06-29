@@ -13,12 +13,15 @@ processor*/
 0.*/
 
 *.bak
-
+*.pdf
 *.mod
 *.o
 *.e
 *.zf
 *.cyj
+
+*.mp4
+*.sty
 
 uniform/
 phi

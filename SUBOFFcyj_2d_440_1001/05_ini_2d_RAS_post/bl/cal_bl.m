@@ -1,7 +1,7 @@
 clc;clear;
 load('ReadData/Mesh.mat')
 load('flow_field.mat')
-NS=981;NN=440;
+NS=1001;NN=440;
 Us=flow_field.Us;
 Ue=zeros(1,NS);
 idx99=zeros(1,NS);

@@ -194,6 +194,25 @@ set(groot, 'defaultAxesLineWidth', 1.2);
 Cf_sum = Cf_nu + Cf_PG + Cf_C + Cf_D + Cf_RS;
 
 % -------------------------------------------------------------------------
+% Apply Smoothing to FIK Terms (creating new _sm variables)
+% -------------------------------------------------------------------------
+
+
+
+Cf_nu_sm  = Cf_nu;
+Cf_RS_sm  = Cf_RS;
+Cf_PG_sm  = Cf_PG;
+Cf_C_sm   = Cf_C;
+Cf_D_sm   = Cf_D;
+
+win_size = 50;
+start_index=450;
+Cf_nu_sm(start_index:end)  = smoothdata(Cf_nu(start_index:end), 'movmean', win_size);
+Cf_RS_sm(start_index:end)  = smoothdata(Cf_RS(start_index:end), 'movmean', win_size);
+Cf_PG_sm(start_index:end)  = smoothdata(Cf_PG(start_index:end), 'movmean', win_size);
+Cf_C_sm(start_index:end)   = smoothdata(Cf_C(start_index:end), 'movmean', win_size);
+Cf_D_sm(start_index:end)   = smoothdata(Cf_D(start_index:end), 'movmean', win_size);
+% -------------------------------------------------------------------------
 % FIGURE 1: FIK Identity Verification and Decomposition
 % -------------------------------------------------------------------------
 L = 4.356 * 0.2;
@@ -202,13 +221,12 @@ figure('Position', [400, 100, 900, 400], 'Name', 'FIK Decomposition');
 plot(S/L, Cf, 'k', 'LineWidth', 2.5, 'DisplayName', '$C_f$'); hold on;
 plot(S(1:25:end-5)/L, Cf_sum(1:25:end-5), 'r', 'LineStyle', 'none', 'LineWidth', 2, ...
     'Marker', 'square', 'MarkerSize', 8, 'DisplayName', '$\sum C_{f,i}$ (FIK)');
-plot(S(1:25:end-5)/L, Cf_nu(1:25:end-5), 'b^-', 'LineWidth', 1.5, 'DisplayName', '$C_{\nu}$');
-plot(S(1:25:end-5)/L, Cf_RS(1:25:end-5), 'd-', 'Color', [0.8500 0.3250 0.0980], ...
+plot(S(1:25:end-5)/L, Cf_nu_sm(1:25:end-5), 'b^-', 'LineWidth', 1.5, 'DisplayName', '$C_{\nu}$');
+plot(S(1:25:end-5)/L, Cf_RS_sm(1:25:end-5), 'd-', 'Color', [0.8500 0.3250 0.0980], ...
     'LineWidth', 1.5, 'DisplayName', '$C_{RS}$');
-plot(S(1:25:end-5)/L, Cf_PG(1:25:end-5), 'g<-', 'LineWidth', 1.5, 'DisplayName', '$C_{PG}$');
-plot(S(1:25:end-5)/L, Cf_C(1:25:end-5), 'c>-', 'LineWidth', 1.5, 'DisplayName', '$C_{C}$');
-plot(S(1:25:end-5)/L, Cf_D(1:25:end-5), 'mv-', 'LineWidth', 1.5, 'DisplayName', '$C_{D}$');
-
+plot(S(1:25:end-5)/L, Cf_PG_sm(1:25:end-5), 'g<-', 'LineWidth', 1.5, 'DisplayName', '$C_{PG}$');
+plot(S(1:25:end-5)/L, Cf_C_sm(1:25:end-5), 'c>-', 'LineWidth', 1.5, 'DisplayName', '$C_{C}$');
+plot(S(1:25:end-5)/L, Cf_D_sm(1:25:end-5), 'mv-', 'LineWidth', 1.5, 'DisplayName', '$C_{D}$');
 
 legend('Location', 'northeast', 'FontSize', 14, 'Interpreter', 'latex');
 set(gca, 'FontSize', 14, 'TickLabelInterpreter', 'latex');
@@ -218,19 +236,17 @@ ylim([-0.005, 0.015]);
 grid off;
 
 
-
-
 % -------------------------------------------------------------------------
 % FIGURE 2: Ratio of the Terms to Total Cf
 % -------------------------------------------------------------------------
 figure('Position', [400, 100, 900, 400], 'Name', 'FIK Components Ratio');
 
-plot(S(5:25:end-5)/L, Cf_nu(5:25:end-5) ./ Cf(5:25:end-5), 'b^-', 'LineWidth', 1.5, 'DisplayName', '$C_{\nu} / C_f$'); hold on;
-plot(S(5:25:end-5)/L, Cf_RS(5:25:end-5) ./ Cf(5:25:end-5), 'd-', 'Color', [0.8500 0.3250 0.0980], ...
+plot(S(5:25:end-5)/L, Cf_nu_sm(5:25:end-5) ./ Cf(5:25:end-5), 'b^-', 'LineWidth', 1.5, 'DisplayName', '$C_{\nu} / C_f$'); hold on;
+plot(S(5:25:end-5)/L, Cf_RS_sm(5:25:end-5) ./ Cf(5:25:end-5), 'd-', 'Color', [0.8500 0.3250 0.0980], ...
     'LineWidth', 1.5, 'DisplayName', '$C_{RS} / C_f$');
-plot(S(5:25:end-5)/L, Cf_PG(5:25:end-5) ./ Cf(5:25:end-5), 'g<-', 'LineWidth', 1.5, 'DisplayName', '$C_{PG} / C_f$');
-plot(S(5:25:end-5)/L, Cf_C(5:25:end-5) ./ Cf(5:25:end-5), 'c>-', 'LineWidth', 1.5, 'DisplayName', '$C_{C} / C_f$');
-plot(S(5:25:end-5)/L, Cf_D(5:25:end-5) ./ Cf(5:25:end-5), 'mv-', 'LineWidth', 1.5, 'DisplayName', '$C_{D} / C_f$');
+plot(S(5:25:end-5)/L, Cf_PG_sm(5:25:end-5) ./ Cf(5:25:end-5), 'g<-', 'LineWidth', 1.5, 'DisplayName', '$C_{PG} / C_f$');
+plot(S(5:25:end-5)/L, Cf_C_sm(5:25:end-5) ./ Cf(5:25:end-5), 'c>-', 'LineWidth', 1.5, 'DisplayName', '$C_{C} / C_f$');
+plot(S(5:25:end-5)/L, Cf_D_sm(5:25:end-5) ./ Cf(5:25:end-5), 'mv-', 'LineWidth', 1.5, 'DisplayName', '$C_{D} / C_f$');
 
 set(gca, 'FontSize', 14, 'TickLabelInterpreter', 'latex');
 xlabel('$s/L$', 'FontSize', 18, 'Interpreter', 'latex');
@@ -239,6 +255,7 @@ xlim([0, 0.7]);
 ylim([-1, 1.5]);
 grid off;
 
+%% 
 
 
 % =========================================================================
